@@ -1,0 +1,134 @@
+NODE:
+- id: 0
+  pose:
+    direction: head
+    x: 20.829629629629636
+    y: -10.103703703703701
+  type: 1
+- id: 1
+  pose:
+    direction: head
+    x: 21.555555555555543
+    y: -9.600000000000009
+  type: 1
+- id: 2
+  pose:
+    direction: head
+    x: 21.733333333333334
+    y: -10.474074074074068
+  type: 1
+- id: 3
+  pose:
+    direction: head
+    x: 22.503703703703707
+    y: -10.029629629629639
+  type: 1
+- id: 4
+  pose:
+    direction: head
+    x: 22.962962962962962
+    y: -10.948148148148164
+  type: 1
+- id: 5
+  pose:
+    direction: head
+    x: 23.555555555555543
+    y: -10.45925925925927
+  type: 1
+- id: 6
+  pose:
+    direction: head
+    x: 24.770370370370372
+    y: -10.118518518518528
+  type: 1
+- id: 7
+  pose:
+    direction: head
+    x: 24.355555555555554
+    y: -9.333333333333329
+  type: 1
+- id: 8
+  pose:
+    direction: head
+    x: 25.43703703703703
+    y: -8.740740740740748
+  type: 1
+- id: 9
+  pose:
+    direction: head
+    x: 23.925925925925924
+    y: -8.474074074074068
+  type: 1
+- id: 10
+  pose:
+    direction: head
+    x: 24.488888888888894
+    y: -6.637037037037032
+  type: 1
+- id: 11
+  pose:
+    direction: head
+    x: 26.237037037037027
+    y: -7.066666666666663
+  type: 1
+- id: 12
+  pose:
+    direction: head
+    x: 25.733333333333334
+    y: -7.911111111111111
+  type: 1
+- id: 13
+  pose:
+    direction: head
+    x: 26.26666666666665
+    y: -8.162962962962965
+  type: 1
+- id: 14
+  pose:
+    direction: head
+    x: 29.170370370370364
+    y: -9.348148148148155
+  type: 1
+- id: 15
+  pose:
+    direction: head
+    x: 28.888888888888886
+    y: -9.762962962962959
+  type: 1
+- id: 16
+  pose:
+    direction: head
+    x: 28.281481481481478
+    y: -10.874074074074073
+  type: 1
+- id: 17
+  pose:
+    direction: head
+    x: 27.91111111111111
+    y: -10.770370370370372
+  type: 1
+- id: 18
+  pose:
+    direction: head
+    x: 28.04444444444445
+    y: -10.503703703703707
+  type: 1
+- id: 19
+  pose:
+    direction: head
+    x: 28.340740740740756
+    y: -10.474074074074068
+  type: 1
+- id: 20
+  pose:
+    direction: head
+    x: 28.59259259259258
+    y: -10.829629629629636
+  type: 1
+- id: 21
+  pose:
+    direction: head
+    x: 28.207407407407402
+    y: -10.62222222222222
+  type: 1
+OCC_MAP_NAME: /home/user/ws/src/brushee_gui/map/toilet_map.yaml
