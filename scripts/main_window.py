@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
     super().__init__()
     self.setWindowTitle("Map Viewer")
     self.setGeometry(100, 100, 1200, 800)
-    self.current_dir = "/home/user/ws/src/brushee_gui/path/"
+    self.current_dir = "../path/"
     self.map_manager = MapManager(self)
     self.path_manager = PathManager(self)
 
