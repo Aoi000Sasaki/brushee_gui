@@ -46,7 +46,7 @@ class MapGraphicsView(QGraphicsView):
         setting_manager = map_widget.main_window.setting_manager
         self.sm = setting_manager.stgs["map_widget"]
         self.is_map_set = False
-        self.edit_mode = None
+        self.edit_mode = "SELECT"
         self.start_point = None
         self.current_point = None
         self.end_point = None
