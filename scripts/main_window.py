@@ -7,12 +7,26 @@ from editor_toolbar import EditorToolBar
 from data_utils import MapManager, settingManager
 import os
 
+# TODO:
+# use pub-sub or event throw
+# debug message print after finish process
+# x_pix -> x_p x_coord -> x_c
+# color data write to yaml (setting file)
+# use assert
+# use os path
+# optimize map scaling and origin when initialize
+# delete deep if-else using return
+# show item info when hover
+# show id beside item
+# separate initialize ui and class variable
+
 class MainWindow(QMainWindow):
     def __init__(self, crt_dir):
         super().__init__()
         # class variable initialization
         self.map_manager = MapManager(self)
-        self.sm = settingManager(crt_dir)
+        setting_manager = settingManager(crt_dir)
+        self.sm = setting_manager.stgs["main_window"]
         self.crt_dir = crt_dir
 
         # map widget setting
@@ -24,10 +38,10 @@ class MainWindow(QMainWindow):
         self.setMenuBar(DraggableMenuBar(self, parent=self))
 
         self.setWindowTitle("Brushee GUI")
-        pos_x = self.sm.stgs["window"]["pos_x"]
-        pos_y = self.sm.stgs["window"]["pos_y"]
-        width = self.sm.stgs["window"]["width"]
-        height = self.sm.stgs["window"]["height"]
+        pos_x = self.sm.stgs["pos_x"]
+        pos_y = self.sm.stgs["pos_y"]
+        width = self.sm.stgs["width"]
+        height = self.sm.stgs["height"]
         self.setGeometry(pos_x, pos_y, width, height)
         self.setWindowFlags(Qt.FramelessWindowHint)
         icon_path = os.path.join(self.crt_dir,

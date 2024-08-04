@@ -9,7 +9,8 @@ class MapWidget(QWidget):
         # class variable initialization
         self.main_window = main_window
         self.map_manager = main_window.map_manager
-        self.sm = main_window.setting_manager
+        setting_manager = main_window.setting_manager
+        self.sm = setting_manager.stgs["map_widget"]
 
         # map graphics view setting
         self.graphics_view = MapGraphicsView(self)
@@ -23,11 +24,11 @@ class MapWidget(QWidget):
         self.setMouseTracking(True)
 
     def zoom_in(self):
-        zoom_factor = self.sm.stgs["map"]["zoom_factor"]
+        zoom_factor = self.sm.stgs["zoom_factor"]
         self.graphics_view.scale(zoom_factor, zoom_factor)
 
     def zoom_out(self):
-        zoom_factor = self.sm.stgs["map"]["zoom_factor"]
+        zoom_factor = self.sm.stgs["zoom_factor"]
         self.graphics_view.scale(1/zoom_factor, 1/zoom_factor)
 
     def keyPressEvent(self, event):
@@ -42,7 +43,8 @@ class MapGraphicsView(QGraphicsView):
         super().__init__(parent=map_widget)
         # class variable initialization
         self.map_widget = map_widget
-        self.sm = map_widget.setting_manager
+        setting_manager = map_widget.main_window.setting_manager
+        self.sm = setting_manager.stgs["map_widget"]
         self.is_map_set = False
         self.edit_mode = None
         self.start_point = None
@@ -157,7 +159,7 @@ class MapGraphicsView(QGraphicsView):
             if self.moving_element is None:
                 return
             else:
-                # move element action here
+                self.map_manager.move_node(self.moving_element, self.current_point)
                 return
 
         if event.type() == QEvent.MouseButtonRelease:
@@ -165,11 +167,11 @@ class MapGraphicsView(QGraphicsView):
             dy = self.end_point.y() - self.start_point.y()
             distance = math.sqrt(dx**2 + dy**2)
             if not self.is_moving:
-                if distance < self.sm.stgs["move"]["click_threshold"]:
+                if distance < self.sm.stgs["move_mode"]["click_th"]:
                     self.is_moving = True
                     return
-            # move element action here
-            # print state
+            self.map_manager.move_node(self.moving_element, self.end_point)
+            print(f"Move node {self.moving_element.data['id']} to {self.end_point}")
             self.moving_element.apply_original_style()
             self.is_moving = False
             self.moving_element = None
