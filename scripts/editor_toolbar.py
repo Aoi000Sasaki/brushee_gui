@@ -22,14 +22,14 @@ class EditorToolBar(QToolBar):
          "status_tip": "Add node",
          "tooltip": "Add node",
          "callback": self.add_node},
-        {"icon": "move_node.png",
-         "status_tip": "Move node",
-         "tooltip": "Move node",
-         "callback": self.move_node},
-        {"icon": "delete_node.png",
-         "status_tip": "Delete node",
-         "tooltip": "Delete node",
-         "callback": self.delete_node},
+        {"icon": "move.png",
+         "status_tip": "Move element",
+         "tooltip": "Move element",
+         "callback": self.move},
+        {"icon": "delete.png",
+         "status_tip": "Delete element",
+         "tooltip": "Delete element",
+         "callback": self.delete},
         {"icon": "paint_map.png",
          "status_tip": "Paint map",
          "tooltip": "Paint map",
@@ -67,11 +67,11 @@ class EditorToolBar(QToolBar):
     def add_node(self):
         self.graphics_view.edit_mode = "ADD_NODE"
 
-    def move_node(self):
-        self.graphics_view.edit_mode = "MOVE_NODE"
+    def move(self):
+        self.graphics_view.edit_mode = "MOVE"
 
-    def delete_node(self):
-        self.graphics_view.edit_mode = "DELETE_NODE"
+    def delete(self):
+        self.graphics_view.edit_mode = "DELETE"
 
     def paint_map(self):
         self.graphics_view.edit_mode = "PAINT_MAP"

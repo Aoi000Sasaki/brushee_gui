@@ -75,10 +75,10 @@ class MapGraphicsView(QGraphicsView):
         self.start_point = self.mapToScene(event.pos())
         if self.edit_mode == "ADD_NODE":
             self.add_node_event()
-        elif self.edit_mode == "DELETE_NODE":
-            self.delete_node_event()
-        elif self.edit_mode == "MOVE_NODE":
-            self.move_node_event(event)
+        elif self.edit_mode == "DELETE":
+            self.delete_event()
+        elif self.edit_mode == "MOVE":
+            self.move_event(event)
         elif self.edit_mode == "SELECT":
             self.select_event()
 
@@ -90,8 +90,8 @@ class MapGraphicsView(QGraphicsView):
             return super().mouseMoveEvent(event)
 
         self.current_point = self.mapToScene(event.pos())
-        if self.edit_mode == "MOVE_NODE":
-            self.move_node_event(event)
+        if self.edit_mode == "MOVE":
+            self.move_event(event)
         elif self.edit_mode == "SELECT":
             self.update_tooltip(event)
         self.update()
@@ -101,8 +101,8 @@ class MapGraphicsView(QGraphicsView):
             return super().mouseReleaseEvent(event)
 
         self.end_point = self.mapToScene(event.pos())
-        if self.edit_mode == "MOVE_NODE":
-            self.move_node_event(event)
+        if self.edit_mode == "MOVE":
+            self.move_event(event)
 
         self.update()
         return super().mouseReleaseEvent(event)
@@ -115,7 +115,7 @@ class MapGraphicsView(QGraphicsView):
     def add_node_event(self):
         self.map_manager.add_node(self.start_point)
 
-    def delete_node_event(self):
+    def delete_event(self):
         element = self.map_manager.get_clicked_element(self.start_point)
         if element is None:
             return
@@ -137,7 +137,7 @@ class MapGraphicsView(QGraphicsView):
                 print("Cancel")
                 element.apply_original_style()
 
-    def move_node_event(self, event):
+    def move_event(self, event):
         if event.type() == QEvent.MouseButtonPress:
             if self.is_moving:
                 return
@@ -145,7 +145,7 @@ class MapGraphicsView(QGraphicsView):
                 element = self.map_manager.get_clicked_element(self.start_point)
                 if element is None:
                     return
-                else:
+                elif element.attribute == "NODE":
                     pen = QColor(self.sm.stgs["node"]["move_pen"])
                     pen = QPen(pen)
                     pen.setWidth(self.sm.stgs["node"]["move_pen_w"])
