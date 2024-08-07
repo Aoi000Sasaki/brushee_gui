@@ -5,111 +5,126 @@ import os
 import datetime
 
 class DraggableMenuBar(QMenuBar):
-  def __init__(self, main_window, parent=None):
-    super().__init__(parent=parent)
-    self.main_window = main_window
-    self.oldPos = None
+    def __init__(self, main_window, parent=None):
+        super().__init__(parent=parent)
+        # class variable initialization
+        self.main_window = main_window
+        self.old_pos = None
 
-    self.menu_items = [
-      FileMenu(self.main_window, parent=self),
-      EditMenu(self.main_window, parent=self),
-      ViewMenu(self.main_window, parent=self),
-      HelpMenu(self.main_window, parent=self)
-    ]
-    for item in self.menu_items:
-      self.addMenu(item)
+        # main icon setting (top left corner)
+        main_icon_label = QPushButton()
+        main_icon_path = os.path.join(os.path.dirname(os.getcwd()),
+                                      "icon",
+                                      "main_window",
+                                      "main_icon.png")
+        main_icon_label.setIcon(QIcon(main_icon_path))
+        main_icon_label.setIconSize(QSize(20, 20))
+        main_icon_label.setFlat(True)
+        main_icon_label.setStyleSheet("border: none;")
+        self.setCornerWidget(main_icon_label, Qt.TopLeftCorner)
 
-    main_icon_label = QPushButton()
-    main_icon_label.setIcon(QIcon("../icon/main_window/main_icon.png"))
-    main_icon_label.setIconSize(QSize(20, 20))
-    main_icon_label.setFlat(True)
-    main_icon_label.setStyleSheet("border: none;")
+        # button setting (top right corner)
+        self.button_items = [
+            {"icon": "minimize.png",
+             "callback": self.main_window.showMinimized},
+            {"icon": "maximize.png",
+             "callback": self.main_window.toggle_maximize_restore},
+            {"icon": "close.png",
+             "callback": self.main_window.close}
+        ]
+        button_layout = QHBoxLayout()
+        button_layout.setContentsMargins(0, 0, 0, 0)
+        for item in self.button_items:
+            button = QPushButton()
+            icon_path = os.path.join(os.path.dirname(os.getcwd()),
+                                     "icon",
+                                     "main_window",
+                                     item["icon"])
+            button.setIcon(QIcon(icon_path))
+            button.setIconSize(QSize(24, 24))
+            button.setFlat(True)
+            button.clicked.connect(item["callback"])
+            button_layout.addWidget(button)
+            item = button
+        button_widget = QWidget(self.main_window)
+        button_widget.setLayout(button_layout)
+        self.setCornerWidget(button_widget, Qt.TopRightCorner)
 
-    spacer = QWidget(self)
-    spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        # menu bar setting
+        self.menu_items = [
+            FileMenu(self.main_window, parent=self),
+            EditMenu(self.main_window, parent=self),
+            ViewMenu(self.main_window, parent=self),
+            HelpMenu(self.main_window, parent=self)
+        ]
+        for item in self.menu_items:
+            self.addMenu(item)
+
+    # spacer = QWidget(self)
+    # spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
     # self.setCornerWidget(spacer, Qt.TopRightCorner)
 
-    self.button_items = [
-      {"icon": "../icon/main_window/minimize.png",
-       "callback": self.main_window.showMinimized},
-      {"icon": "../icon/main_window/maximize.png",
-       "callback": self.main_window.toggle_maximize_restore},
-      {"icon": "../icon/main_window/close.png",
-       "callback": self.main_window.close}
-    ]
 
-    button_layout = QHBoxLayout()
-    button_layout.setContentsMargins(0, 0, 0, 0)
-    for i, item in enumerate(self.button_items):
-      button = QPushButton()
-      button.setIcon(QIcon(item["icon"]))
-      button.setIconSize(QSize(24, 24))
-      button.setFlat(True)
-      button.clicked.connect(item["callback"])
-      button_layout.addWidget(button)
-      self.button_items[i] =button
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            for item in self.menu_items:
+                if item.rect().contains(event.pos()):
+                    self.old_pos = None
+                    return super().mousePressEvent(event)
+            for item in self.button_items:
+                if item.rect().contains(event.pos()):
+                    self.old_pos = None
+                    return super().mousePressEvent(event)
+            self.old_pos = event.globalPos()
+        super().mousePressEvent(event)
 
-    button_widget = QWidget(self.main_window)
-    button_widget.setLayout(button_layout)
-    self.setCornerWidget(main_icon_label, Qt.TopLeftCorner)
-    self.setCornerWidget(button_widget, Qt.TopRightCorner)
-
-  def mousePressEvent(self, event):
-    if event.button() == Qt.LeftButton:
-      for item in self.menu_items:
-        if item.rect().contains(event.pos()):
-          self.oldPos = None
-          return super().mousePressEvent(event)
-      for item in self.button_items:
-        if item.rect().contains(event.pos()):
-          self.oldPos = None
-          return super().mousePressEvent(event)
-      self.oldPos = event.globalPos()
-    super().mousePressEvent(event)
-
-  def mouseMoveEvent(self, event):
-    if event.buttons() == Qt.LeftButton and self.oldPos is not None:
-      delta = event.globalPos() - self.oldPos
-      parent = self.parentWidget()
-      parent.move(parent.x() + delta.x(), parent.y() + delta.y())
-      self.oldPos = event.globalPos()
-      event.accept()
-    super().mouseMoveEvent(event)
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton and self.old_pos is not None:
+            delta = event.globalPos() - self.old_pos
+            parent = self.parentWidget()
+            parent.move(parent.x() + delta.x(), parent.y() + delta.y())
+            self.old_pos = event.globalPos()
+            event.accept()
+        super().mouseMoveEvent(event)
 
 # TODO: not crash when cansel
 class FileMenu(QMenu):
-  def __init__(self, main_window, parent=None):
-    super().__init__("&File", parent=parent)
-    self.main_window = main_window
-    self.map_widget = main_window.map_widget
-    self.map_manager = main_window.map_manager
-    self.path_manager = main_window.path_manager
+    def __init__(self, main_window, parent=None):
+        super().__init__("&File", parent=parent)
+        # class variable initialization
+        self.main_window = main_window
+        self.map_manager = main_window.map_manager
 
-    filemenu_items = [
-      {"name": "Open Exiting Path",
-       "shortcut": "Ctrl+P",
-       "status_tip": "Open a path file",
-       "triggered": self.open_exiting_path},
-      {"name": "Create New Path",
-       "shortcut": "Ctrl+N",
-       "status_tip": "Create a new path file",
-       "triggered": self.create_new_path},
-      {"name": "Overwrite Path",
-       "shortcut": "Ctrl+S",
-       "status_tip": "Overwrite the current path file",
-       "triggered": self.overwrite_path},
-      {"name": "Save As Path",
-       "shortcut": "Ctrl+Shift+S",
-       "status_tip": "Save the current path fible as a new file",
-       "triggered": self.save_as_path}
-    ]
+        # file menu setting
+        # TODO: the word "overlay" ... good ??
+        filemenu_items = [
+            {"name": "Open Exiting Overlay File",
+             "shortcut": "Ctrl+O",
+             "status_tip": "Open an overlay file",
+             "triggered": self.open_exiting_file},
+            {"name": "Create New Overlay File",
+             "shortcut": "Ctrl+N",
+             "status_tip": "Create a new overlay file",
+             "triggered": self.create_new_file},
+            {"name": "Overwrite Overlay File",
+             "shortcut": "Ctrl+S",
+             "status_tip": "Overwrite the current overlay file",
+             "triggered": self.overwrite_file},
+            {"name": "Save As Overlay File",
+             "shortcut": "Ctrl+Shift+S",
+             "status_tip": "Save the current overlay file as a new file",
+             "triggered": self.save_as_file}
+        ]
+        for item in filemenu_items:
+            action = QAction(item["name"], self)
+            action.setShortcut(item["shortcut"])
+            action.setStatusTip(item["status_tip"])
+            action.triggered.connect(item["triggered"])
+            self.addAction(action)
 
-    for item in filemenu_items:
-      action = QAction(item["name"], self)
-      action.setShortcut(item["shortcut"])
-      action.setStatusTip(item["status_tip"])
-      action.triggered.connect(item["triggered"])
-      self.addAction(action)
+    def open_exiting_file(self):
+        if not self.map_manager.is_saved:
+            message = f"Do you want
 
   def open_exiting_path(self):
     print(f"{self.__class__} : Open exiting path")

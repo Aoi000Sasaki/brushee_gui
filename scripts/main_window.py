@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         height = self.sm.stgs["height"]
         self.setGeometry(pos_x, pos_y, width, height)
         self.setWindowFlags(Qt.FramelessWindowHint)
-        icon_path = os.path.join(self.crt_dir,
+        icon_path = os.path.join(os.path.dirname(os.getcwd()),
                                  "icon",
                                  "main_window",
                                  "main_icon.png")

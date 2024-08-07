@@ -43,7 +43,7 @@ class EditorToolBar(QToolBar):
         self.button_group.setExclusive(True)
         for button in toolbar_buttons:
             button = QToolButton()
-            icon_path = os.path.join(self.mainwindow.crt_dir,
+            icon_path = os.path.join(os.path.dirname(os.getcwd()),
                                      "icon",
                                      "editor_toolbar",
                                      button["icon"])
