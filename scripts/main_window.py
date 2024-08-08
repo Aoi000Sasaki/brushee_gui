@@ -19,6 +19,8 @@ import os
 # show item info when hover
 # show id beside item
 # separate initialize ui and class variable
+# raise exception
+# warn or not
 
 class MainWindow(QMainWindow):
     def __init__(self, crt_dir):
