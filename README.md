@@ -37,6 +37,8 @@ python3 main.py
 
 ## 使用方法
 
+![image](https://github.com/user-attachments/assets/40f9820f-3f44-4a4e-b2f7-39179cf69a12)
+
 ### Menu Bar
 - **File**: 経由地点ファイルの読み込み，保存
     - **Open Exiting Map Elements File**: 既存の経由地点ファイルの読み込み（地図は紐づけられているものを開く）
