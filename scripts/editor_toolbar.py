@@ -1,80 +1,80 @@
 from PyQt5.QtWidgets import QToolBar, QButtonGroup, QToolButton
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
+import os
 
 class EditorToolBar(QToolBar):
-  def __init__(self, mainwindow, parent=None):
-    super().__init__(parent=parent)
-    self.mainwindow = mainwindow
-    self.setIconSize(QSize(32, 32))
-    self.setMovable(False)
-    self.setFloatable(False)
+    def __init__(self, mainwindow, parent=None):
+        super().__init__(parent=parent)
+        # class variable initialization
+        self.mainwindow = mainwindow
+        self.graphics_view = mainwindow.map_widget.graphics_view
+        setting_manager = mainwindow.setting_manager
+        self.sm = setting_manager.stgs["editor_toolbar"]
 
-    toolbar_items = [
-      {"icon": "../icon/editor_toolbar/select.png",
-       "status_tip": "Select",
-       "tooltip": "Select",
-       "callback": self.select},
-      {"icon": "../icon/editor_toolbar/add_node.png",
-       "status_tip": "Add node",
-       "tooltip": "Add node",
-       "callback": self.add_node},
-      {"icon": "../icon/editor_toolbar/move_node.png",
-       "status_tip": "Move node",
-       "tooltip": "Move node",
-       "callback": self.move_node},
-      {"icon": "../icon/editor_toolbar/delete_node.png",
-       "status_tip": "Delete node",
-       "tooltip": "Delete node",
-       "callback": self.delete_node},
-      {"icon": "../icon/editor_toolbar/paint_map.png",
-       "status_tip": "Paint map",
-       "tooltip": "Paint map",
-       "callback": self.paint_map},
-      {"icon": "../icon/editor_toolbar/erase_map.png",
-       "status_tip": "Erase map",
-       "tooltip": "Erase map",
-       "callback": self.erase_map}
-    ]
+        # toolbar button setting
+        toolbar_buttons = [
+        {"icon": "select.png",
+         "status_tip": "Select",
+         "tooltip": "Select",
+         "callback": self.select},
+        {"icon": "add_node.png",
+         "status_tip": "Add node",
+         "tooltip": "Add node",
+         "callback": self.add_node},
+        {"icon": "move.png",
+         "status_tip": "Move element",
+         "tooltip": "Move element",
+         "callback": self.move},
+        {"icon": "delete.png",
+         "status_tip": "Delete element",
+         "tooltip": "Delete element",
+         "callback": self.delete},
+        {"icon": "paint_map.png",
+         "status_tip": "Paint map",
+         "tooltip": "Paint map",
+         "callback": self.paint_map},
+        {"icon": "erase_map.png",
+         "status_tip": "Erase map",
+         "tooltip": "Erase map",
+         "callback": self.erase_map}
+        ]
+        self.button_group = QButtonGroup(self)
+        self.button_group.setExclusive(True)
+        for btn_stg in toolbar_buttons:
+            button = QToolButton()
+            icon_path = os.path.join(os.path.dirname(os.getcwd()),
+                                     "icon",
+                                     "editor_toolbar",
+                                     btn_stg["icon"])
+            button.setIcon(QIcon(icon_path))
+            button.setStatusTip(btn_stg["status_tip"])
+            button.setToolTip(btn_stg["tooltip"])
+            button.clicked.connect(btn_stg["callback"])
+            button.setCheckable(True)
+            if btn_stg["status_tip"] == "Select":
+                button.setChecked(True)
+            self.addWidget(button)
+            self.button_group.addButton(button)
 
-    button_group = QButtonGroup(self)
-    button_group.setExclusive(True)
+        # editor toolbar setting
+        self.setIconSize(QSize(32, 32))
+        self.setMovable(False)
 
-    for item in toolbar_items:
-      button = QToolButton()
-      button.setIcon(QIcon(item["icon"]))
-      button.setStatusTip(item["status_tip"])
-      button.setToolTip(item["tooltip"])
-      button.clicked.connect(item["callback"])
-      button.setCheckable(True)
+    def select(self):
+        self.graphics_view.edit_mode = "SELECT"
 
-      if item["status_tip"] == "Select":
-        button.setChecked(True)
-      self.addWidget(button)
-      button_group.addButton(button)
+    def add_node(self):
+        self.graphics_view.edit_mode = "ADD_NODE"
 
-    self.mainwindow.map_widget.edit_mode = "SELECT"
+    def move(self):
+        self.graphics_view.edit_mode = "MOVE"
 
-  def select(self):
-    print(f"{self.__class__} : Select")
-    self.mainwindow.map_widget.edit_mode = "SELECT"
+    def delete(self):
+        self.graphics_view.edit_mode = "DELETE"
 
-  def add_node(self):
-    print(f"{self.__class__} : Add node")
-    self.mainwindow.map_widget.edit_mode = "ADD_NODE"
+    def paint_map(self):
+        self.graphics_view.edit_mode = "PAINT_MAP"
 
-  def move_node(self):
-    print(f"{self.__class__} : Move node")
-    self.mainwindow.map_widget.edit_mode = "MOVE_NODE"
-
-  def delete_node(self):
-    print(f"{self.__class__} : Delete")
-    self.mainwindow.map_widget.edit_mode = "DELETE_NODE"
-
-  def paint_map(self):
-    print(f"{self.__class__} : Paint map")
-    self.mainwindow.map_widget.edit_mode = "PAINT_MAP"
-
-  def erase_map(self):
-    print(f"{self.__class__} : Erase map")
-    self.mainwindow.map_widget.edit_mode = "ERASE_MAP"
+    def erase_map(self):
+        self.graphics_view.edit_mode = "ERASE_MAP"

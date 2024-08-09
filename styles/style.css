@@ -5,6 +5,7 @@ QMenuBar {
   min-height: 30px;
   border: none;
 }
+
 QMenuBar::item {
   background-color: #aaaaaa;
   color: #000000;
@@ -12,28 +13,33 @@ QMenuBar::item {
   border: none;
 
 }
+
 QMenuBar::item::selected {
   background-color: #888888;
   color: #000000;
   border: none;
 }
+
 QMenu {
   background-color: #aaaaaa;
   color: #000000;
   padding: 2px 10px;
   border: none;
 }
+
 QMenu::item {
   background-color: #aaaaaa;
   color: #000000;
   padding: 5px 6px;
   border: none;
 }
+
 QMenu::item::selected {
   background-color: #888888;
   color: #000000;
   border: none;
 }
+
 QToolBar {
   background-color: #d2d1d3;
   color: #000000;
@@ -41,28 +47,34 @@ QToolBar {
   min-height: 60px;
   border: none;
 }
+
 QToolButton {
   background-color: #d2d1d3;
   color: #000000;
   padding: 5px 5px;
 }
+
 QToolButton::checked {
   background-color: #bebebe;
   color: #000000;
 }
+
 QPushButton {
   background-color: #aaaaaa;
   color: #000000;
   padding: 2px 2px;
 }
+
 QPushButton::hover {
   background-color: #888888;
   color: #000000;
 }
+
 QPushButton::pressed {
   background-color: #666666;
   color: #000000;
 }
+
 QToolTip {
   background-color: #d2d1d3;
   color: #000000;

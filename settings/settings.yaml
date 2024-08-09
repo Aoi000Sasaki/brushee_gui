@@ -1,0 +1,30 @@
+editor_toolbar: null
+main_window:
+  height: 800
+  pos_x: 100
+  pos_y: 100
+  width: 1200
+map_graphics_view:
+  edge:
+    pen: '#FFA500'
+  move_mode:
+    click_th: 10
+  node:
+    del_brush: '#FF6464'
+    del_pen: '#FF0000'
+    del_pen_w: 2
+    hn_brush: '#90EE90'
+    hn_pen: '#008000'
+    hn_pen_w: 1
+    kn_brush: '#ADD8E6'
+    kn_pen: '#0000FF'
+    kn_pen_w: 1
+    mov_brush: '#FF6464'
+    mov_pen: '#FF0000'
+    mov_pen_w: 2
+    on_brush: '#D3D3D3'
+    on_pen: '#808080'
+    on_pen_w: 1
+    triangle_base_size: 0.3
+map_widget:
+  zoom_factor: 1.5
