@@ -34,7 +34,7 @@ class DraggableMenuBar(QMenuBar):
         ]
         button_layout = QHBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
-        for item in self.button_items:
+        for idx, item in enumerate(self.button_items):
             button = QPushButton()
             icon_path = os.path.join(os.path.dirname(os.getcwd()),
                                      "icon",
@@ -45,7 +45,7 @@ class DraggableMenuBar(QMenuBar):
             button.setFlat(True)
             button.clicked.connect(item["callback"])
             button_layout.addWidget(button)
-            item = button
+            self.button_items[idx] = button
         button_widget = QWidget(self.main_window)
         button_widget.setLayout(button_layout)
         self.setCornerWidget(button_widget, Qt.TopRightCorner)
@@ -134,8 +134,8 @@ class FileMenu(QMenu):
                 return
 
         # open an existing map elements file
-        current_dir = self.main_window.current_dir
-        fname = QFileDialog.getOpenFileName(None, "Open Map Elements File", current_dir, "Map Elements Files (*.yaml)")
+        crt_dir = self.main_window.crt_dir
+        fname = QFileDialog.getOpenFileName(None, "Open Map Elements File", crt_dir, "Map Elements Files (*.yaml)")
 
         # check if the user cancels the file dialog
         if fname[0] == "":
@@ -145,10 +145,11 @@ class FileMenu(QMenu):
         elements_path = fname[0]
         child_dir = os.path.dirname(elements_path)
         parent_dir = os.path.dirname(child_dir)
-        self.main_window.current_dir = parent_dir
+        self.main_window.crt_dir = parent_dir
 
         # check if the selected file is a valid map elements file
         if self.map_manager.check_validation(elements_path):
+            self.map_manager.reset_data()
             self.map_manager.load_elements(elements_path)
         else:
             return
@@ -158,10 +159,14 @@ class FileMenu(QMenu):
         is_map_loaded = self.map_manager.load_map(map_yaml_path)
         if not is_map_loaded:
             print(f"can't load map file {map_yaml_path}")
-            self.open_map()
+            is_map_loaded = self.open_map()
+
+        # check if the map is loaded
+        if not is_map_loaded:
+            return
 
         # show map and loaded elements
-        self.map_manager.show_map()
+        self.map_manager.show_loaded_map()
         self.map_manager.show_loaded_elements()
         print(f"open map elements file {elements_path}")
 
@@ -175,36 +180,43 @@ class FileMenu(QMenu):
             elif reply == QMessageBox.Cancel:
                 return
 
-        # create a new map elements file
-        self.map_manager.reset()
+        # reset both elements and map
+        self.map_manager.reset_data()
 
-        # open and show map
-        self.open_map()
-        self.map_manager.show_map()
+
+        # check if the map is loaded
+        is_map_loaded = self.open_map()
+        if not is_map_loaded:
+            return
+
+        # show map
+        self.map_manager.show_loaded_map()
 
     def open_map(self):
         # open a map file
-        current_dir = self.main_window.current_dir
-        fname = QFileDialog.getOpenFileName(None, "Open Map", current_dir, "Map Files (*.yaml)")
+        crt_dir = self.main_window.crt_dir
+        fname = QFileDialog.getOpenFileName(None, "Open Map", crt_dir, "Map Files (*.yaml)")
 
         # check if the user cancels the file dialog
         if fname[0] == "":
-            return
+            return False
 
         # update the current directory
         map_yaml_path = fname[0]
         child_dir = os.path.dirname(map_yaml_path)
         parent_dir = os.path.dirname(child_dir)
-        self.main_window.current_dir = parent_dir
+        self.main_window.crt_dir = parent_dir
 
         # load map
         is_map_loaded = self.map_manager.load_map(map_yaml_path)
         if not is_map_loaded:
             print(f"can't load map file {map_yaml_path}")
-            return
+            return False
         else:
             print(f"load map file {map_yaml_path}")
             self.map_manager.map_yaml_path = map_yaml_path
+
+        return True
 
     def overwrite_file(self):
         # check if the current map elements file is saved before overwriting
@@ -221,10 +233,10 @@ class FileMenu(QMenu):
 
     def save_as_file(self):
         # get the path to save the map elements file
-        current_dir = self.main_window.current_dir
+        crt_dir = self.main_window.crt_dir
         date_str = datetime.datetime.now().strftime("%Y%m%d-%H%M")
         default_fname = "elements-" + date_str + ".yaml"
-        default_path = os.path.join(current_dir, default_fname)
+        default_path = os.path.join(crt_dir, default_fname)
         fname, _ = QFileDialog.getSaveFileName(None, "Save As Map Elements File", default_path, "Map Elements Files (*.yaml)")
 
         # check if fname is valid
@@ -236,7 +248,7 @@ class FileMenu(QMenu):
         # update the current directory
         child_dir = os.path.dirname(elements_path)
         parent_dir = os.path.dirname(child_dir)
-        self.main_window.current_dir = parent_dir
+        self.main_window.crt_dir = parent_dir
 
         # save the map elements file
         self.map_manager.elements_path = elements_path

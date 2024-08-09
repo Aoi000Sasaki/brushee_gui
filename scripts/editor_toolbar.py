@@ -41,18 +41,18 @@ class EditorToolBar(QToolBar):
         ]
         self.button_group = QButtonGroup(self)
         self.button_group.setExclusive(True)
-        for button in toolbar_buttons:
+        for btn_stg in toolbar_buttons:
             button = QToolButton()
             icon_path = os.path.join(os.path.dirname(os.getcwd()),
                                      "icon",
                                      "editor_toolbar",
-                                     button["icon"])
+                                     btn_stg["icon"])
             button.setIcon(QIcon(icon_path))
-            button.setStatusTip(button["status_tip"])
-            button.setToolTip(button["tooltip"])
-            button.clicked.connect(button["callback"])
+            button.setStatusTip(btn_stg["status_tip"])
+            button.setToolTip(btn_stg["tooltip"])
+            button.clicked.connect(btn_stg["callback"])
             button.setCheckable(True)
-            if button["status_tip"] == "Select":
+            if btn_stg["status_tip"] == "Select":
                 button.setChecked(True)
             self.addWidget(button)
             self.button_group.addButton(button)
