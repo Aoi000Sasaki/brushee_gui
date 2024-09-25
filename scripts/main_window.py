@@ -14,6 +14,7 @@ import os
 # separate initialize ui and class variable
 # raise exception
 # warn or not
+# タブの見出し語を簡潔に（日本語化）
 
 class MainWindow(QMainWindow):
     def __init__(self, crt_dir):

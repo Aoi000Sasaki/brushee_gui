@@ -257,18 +257,10 @@ class MapManager():
             edge = gv.draw_edge(start, end)
 
             data = {
-                "id": -1,
-                "type": -1,
-                "start_node": prev_elem.data["id"],
-                "end_node": elem.data["id"],
-                "start_pos": {
-                    "x": prev_elem.data["pose"]["x"],
-                    "y": prev_elem.data["pose"]["y"]
-                },
-                "end_pos": {
-                    "x": elem.data["pose"]["x"],
-                    "y": elem.data["pose"]["y"]
-                }
+                "start_node_id": prev_elem.data["id"],
+                "end_node_id": elem.data["id"],
+                "command": 0,
+                "skippable": False
             }
             element = Element("EDGE", data, item=edge)
             self.elements.append(element)
@@ -311,7 +303,7 @@ class MapManager():
             save_data[element.attribute].append(element.data)
 
         with open(self.elements_path, 'w') as file:
-            yaml.dump(save_data, file)
+            yaml.dump(save_data, file, sort_keys=False)
             self.is_saved = True
         print(f"Save elements to {self.elements_path}")
 
@@ -380,12 +372,10 @@ class Element():
             text += f"Direction: {self.data['pose']['direction']}"
         elif self.attribute == "EDGE":
             text += "Edge\n"
-            text += f"ID: {self.data['id']}\n"
-            text += f"Type: {self.data['type']}\n"
-            text += f"Start node: {self.data['start_node']}\n"
-            text += f"End node: {self.data['end_node']}\n"
-            text += f"Start pos: ({self.data['start_pos']['x']:.2f}, {self.data['start_pos']['y']:.2f})\n"
-            text += f"End pos: ({self.data['end_pos']['x']:.2f}, {self.data['end_pos']['y']:.2f})"
+            text += f"Start node ID: {self.data['start_node_id']}\n"
+            text += f"End node ID: {self.data['end_node_id']}\n"
+            text += f"Command: {self.data['command']}\n"
+            text += f"Skippable: {self.data['skippable']}"
 
         return text
 
