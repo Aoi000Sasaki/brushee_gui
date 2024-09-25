@@ -24,7 +24,7 @@
 - PIL (Pillow)
 
     ```bash
-    pip install PyQt5 PyYAML Pillow
+    pip3 install PyQt5 PyYAML Pillow
     ```
 
 ### 実行

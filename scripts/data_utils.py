@@ -10,6 +10,8 @@ import math
 class MapManager():
     def __init__(self, main_window):
         self.main_window = main_window
+        setting_manager = main_window.setting_manager
+        self.sm = setting_manager.stgs["map_manager"]
         self.data_loaded = None
         self.elements = []
         self.elements_path = None
@@ -299,7 +301,9 @@ class MapManager():
 
     def save_elements(self):
         save_data = {
-            "OCC_MAP_NAME": self.map_yaml_path
+            "OCC_MAP_NAME": self.map_yaml_path,
+            "PATH_FRAME": self.sm["path_frame"],
+            "MAP_DIRECTION": self.sm["map_direction"]
         }
         for element in self.elements:
             if element.attribute not in save_data:
