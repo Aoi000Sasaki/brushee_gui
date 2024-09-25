@@ -130,15 +130,9 @@ class MapManager():
 
     def add_node(self, point):
         x_c, y_c = self.pixel2coord((point.x(), point.y()))
-        elem_n = len(self.elements)
-        ids = [self.elements[i].data["id"] for i in range(elem_n)]
-        while True:
-            if elem_n not in ids:
-                break
-            elem_n += 1
 
         node = {
-            "id": elem_n,
+            "id": -1, # 仮設定。update_nodes()で先頭のnodeからidを振り直す。
             "pose": {
                 "x": x_c,
                 "y": y_c,
@@ -269,6 +263,7 @@ class MapManager():
         node_elems = [element for element in self.elements if element.attribute == "NODE"]
 
         for idx, elem in enumerate(node_elems):
+            elem.data["id"] = idx
             if idx == 0:
                 elem.internal_data["angle"] = math.pi/2
                 angle = math.degrees(elem.internal_data["angle"])
